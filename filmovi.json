@@ -3,7 +3,7 @@
     "id": 1,
     "naziv": "Ukleta silueta",
     "kategorija": "Horor-Mračan",
-    "opis": "Kratak i malo strašan film."
-    "videoUrl": "https://www.youtube.com/watch?v=yLaNSrAobxI"
+    "opis": "Kratak i malo strašan film.",
+    "videoUrl": "https://www.youtube.com/embed/yLaNSrAobxI"
   }
 ]
