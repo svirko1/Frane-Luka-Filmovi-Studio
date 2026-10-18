@@ -1,9 +1,9 @@
 [
   {
     "id": 1,
-    "naziv": "Moj Prvi Horor Film",
-    "kategorija": "Horor-Komedija",
-    "opis": "Kratak i smiješan opis tvog prvog filma.",
-    "videoUrl": "moj-film-1.mp4"
+    "naziv": "Ukleta silueta",
+    "kategorija": "Horor-Mračan",
+    "opis": "Kratak i malo strašan film."
+    "videoUrl": "https://www.youtube.com/watch?v=yLaNSrAobxI"
   }
 ]
