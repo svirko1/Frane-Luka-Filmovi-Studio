@@ -171,12 +171,19 @@
       border: none;
       background: none;
     }
-    video {
+    .video-container {
+      position: relative;
       width: 100%;
-      border-radius: 8px;
-      max-height: 70vh;
-      background: #000;
+      padding-bottom: 56.25%; /* 16:9 omjer */
+      height: 0;
       margin-top: 15px;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+      border-radius: 8px;
     }
     footer {
       text-align: center;
@@ -202,7 +209,7 @@
 
   <main>
     <div id="movieGrid" class="grid"></div>
-    <div id="emptyMsg" class="empty-msg" style="display: none;">Učitavanje filmova ili nema rezultata...</div>
+    <div id="emptyMsg" class="empty-msg" style="display: none;">Nema pronađenih filmova.</div>
   </main>
 
   <!-- Player Modal -->
@@ -210,7 +217,9 @@
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">&times;</button>
       <h2 id="modalTitle" style="color:#d4af37; margin-bottom:10px;"></h2>
-      <video id="videoPlayer" controls autoplay></video>
+      <div class="video-container">
+        <iframe id="videoIframe" src="" allowfullscreen></iframe>
+      </div>
     </div>
   </div>
 
@@ -219,20 +228,17 @@
   </footer>
 
   <script>
-    let filmoviData = [];
-
-    async function fetchFilmovi() {
-      try {
-        const response = await fetch('filmovi.json');
-        if(!response.ok) throw new Error('Ne mogu učitati filmovi.json');
-        filmoviData = await response.json();
-        renderFilmovi(filmoviData);
-      } catch (error) {
-        console.error('Greška:', error);
-        document.getElementById('emptyMsg').style.display = 'block';
-        document.getElementById('emptyMsg').innerText = 'Dodaj svoje filmove u datoteku "filmovi.json" na GitHubu!';
+    // OVDJE DODAGEŠ SVOJE FILMOVE! 
+    // Kada želiš novi film, samo kopiraš blok između vitičastih zagrada {} i dodaš ga s zarezom.
+    const filmoviData = [
+      {
+        id: 1,
+        naziv: "Ukleta silueta",
+        kategorija: "Horor-Mračan",
+        opis: "Kratak i malo strašan film.",
+        videoUrl: "https://www.youtube.com/embed/yLaNSrAobxI"
       }
-    }
+    ];
 
     function renderFilmovi(lista) {
       const grid = document.getElementById('movieGrid');
@@ -241,7 +247,6 @@
 
       if (!lista || lista.length === 0) {
         emptyMsg.style.display = 'block';
-        emptyMsg.innerText = 'Trenutno nema objavljenih filmova.';
         return;
       }
 
@@ -275,20 +280,17 @@
     // Otvaranje i zatvaranje videa
     function openModal(title, videoUrl) {
       document.getElementById('modalTitle').innerText = title;
-      const player = document.getElementById('videoPlayer');
-      player.src = videoUrl;
+      document.getElementById('videoIframe').src = videoUrl;
       document.getElementById('videoModal').classList.add('active');
     }
 
     function closeModal() {
-      const player = document.getElementById('videoPlayer');
-      player.pause();
-      player.src = '';
+      document.getElementById('videoIframe').src = '';
       document.getElementById('videoModal').classList.remove('active');
     }
 
-    // Pokreni učitavanje
-    fetchFilmovi();
+    // Pokreni prikaz pri učitavanju stranice
+    renderFilmovi(filmoviData);
   </script>
 </body>
 </html>
