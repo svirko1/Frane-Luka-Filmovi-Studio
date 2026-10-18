@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRANE LUKA FILMOVI STUDIO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #0d0d0d;
+      color: #e0e0e0;
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: linear-gradient(180deg, #181818 0%, #0d0d0d 100%);
+      border-bottom: 2px solid #d4af37;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .logo-container h1 {
+      color: #d4af37;
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 5px;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+    .logo-container p {
+      color: #888;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .controls-bar {
+      max-width: 1100px;
+      margin: 30px auto 10px;
+      padding: 0 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .search-input {
+      flex: 1;
+      min-width: 250px;
+      padding: 12px 18px;
+      border-radius: 25px;
+      border: 1px solid #333;
+      background-color: #1a1a1a;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: #d4af37;
+    }
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    .card {
+      background-color: #161616;
+      border: 1px solid #282828;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: #d4af37;
+    }
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-tag {
+      align-self: flex-start;
+      background-color: rgba(212, 175, 55, 0.15);
+      color: #d4af37;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 15px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .card-title {
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .card-desc {
+      color: #aaa;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .watch-btn {
+      background-color: #d4af37;
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s ease;
+    }
+    .watch-btn:hover {
+      background-color: #f1c40f;
+    }
+    .empty-msg {
+      text-align: center;
+      padding: 50px 20px;
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    /* Modal za video */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: #181818;
+      border: 1px solid #d4af37;
+      border-radius: 12px;
+      max-width: 800px;
+      width: 100%;
+      padding: 20px;
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 15px;
+      color: #d4af37;
+      font-size: 2rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+    video {
+      width: 100%;
+      border-radius: 8px;
+      max-height: 70vh;
+      background: #000;
+      margin-top: 15px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 1px solid #222;
+      color: #555;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <h1>FRANE LUKA FILMOVI STUDIO</h1>
+      <p>FILM PRODUCTION • STUDIO • CINEMATOGRAPHY</p>
+    </div>
+  </header>
+
+  <div class="controls-bar">
+    <input type="text" id="searchInput" class="search-input" placeholder="Pretraži filmove...">
+  </div>
+
+  <main>
+    <div id="movieGrid" class="grid"></div>
+    <div id="emptyMsg" class="empty-msg" style="display: none;">Učitavanje filmova ili nema rezultata...</div>
+  </main>
+
+  <!-- Player Modal -->
+  <div id="videoModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      <h2 id="modalTitle" style="color:#d4af37; margin-bottom:10px;"></h2>
+      <video id="videoPlayer" controls autoplay></video>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 FRANE LUKA FILMOVI STUDIO - Sva prava pridržana.
+  </footer>
+
+  <script>
+    let filmoviData = [];
+
+    async function fetchFilmovi() {
+      try {
+        const response = await fetch('filmovi.json');
+        if(!response.ok) throw new Error('Ne mogu učitati filmovi.json');
+        filmoviData = await response.json();
+        renderFilmovi(filmoviData);
+      } catch (error) {
+        console.error('Greška:', error);
+        document.getElementById('emptyMsg').style.display = 'block';
+        document.getElementById('emptyMsg').innerText = 'Dodaj svoje filmove u datoteku "filmovi.json" na GitHubu!';
+      }
+    }
+
+    function renderFilmovi(lista) {
+      const grid = document.getElementById('movieGrid');
+      const emptyMsg = document.getElementById('emptyMsg');
+      grid.innerHTML = '';
+
+      if (!lista || lista.length === 0) {
+        emptyMsg.style.display = 'block';
+        emptyMsg.innerText = 'Trenutno nema objavljenih filmova.';
+        return;
+      }
+
+      emptyMsg.style.display = 'none';
+
+      lista.forEach(film => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-body">
+            <span class="card-tag">${film.kategorija || 'Horor-Komedija'}</span>
+            <h2 class="card-title">${film.naziv}</h2>
+            <p class="card-desc">${film.opis || ''}</p>
+            <button class="watch-btn" onclick="openModal('${film.naziv}', '${film.videoUrl}')">GLEDAJ FILM</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Tražilica
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const filtered = filmoviData.filter(f => 
+        f.naziv.toLowerCase().includes(query) || 
+        (f.opis && f.opis.toLowerCase().includes(query))
+      );
+      renderFilmovi(filtered);
+    });
+
+    // Otvaranje i zatvaranje videa
+    function openModal(title, videoUrl) {
+      document.getElementById('modalTitle').innerText = title;
+      const player = document.getElementById('videoPlayer');
+      player.src = videoUrl;
+      document.getElementById('videoModal').classList.add('active');
+    }
+
+    function closeModal() {
+      const player = document.getElementById('videoPlayer');
+      player.pause();
+      player.src = '';
+      document.getElementById('videoModal').classList.remove('active');
+    }
+
+    // Pokreni učitavanje
+    fetchFilmovi();
+  </script>
+</body>
+</html>
