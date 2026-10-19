@@ -23,16 +23,16 @@
       background: linear-gradient(180deg, #181818 0%, #0d0d0d 100%);
       border-bottom: 2px solid #d4af37;
       text-align: center;
-      padding: 40px 20px;
+      padding: 50px 20px;
     }
     .logo-container h1 {
       color: #d4af37;
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       letter-spacing: 2px;
       text-transform: uppercase;
       font-weight: 800;
       margin-bottom: 5px;
-      text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     }
     .logo-container p {
       color: #888;
@@ -40,6 +40,8 @@
       letter-spacing: 3px;
       text-transform: uppercase;
     }
+    
+    /* Navigacija i filteri */
     .controls-bar {
       max-width: 1100px;
       margin: 30px auto 10px;
@@ -48,6 +50,7 @@
       gap: 15px;
       flex-wrap: wrap;
       justify-content: space-between;
+      align-items: center;
     }
     .search-input {
       flex: 1;
@@ -63,6 +66,28 @@
     .search-input:focus {
       border-color: #d4af37;
     }
+    .category-filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #aaa;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: #d4af37;
+      color: #000;
+      border-color: #d4af37;
+    }
+
     main {
       flex: 1;
       max-width: 1100px;
@@ -70,9 +95,11 @@
       margin: 0 auto;
       padding: 20px;
     }
+    
+    /* Grid filmova */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 25px;
     }
     .card {
@@ -87,6 +114,29 @@
     .card:hover {
       transform: translateY(-5px);
       border-color: #d4af37;
+    }
+    .card-img-container {
+      width: 100%;
+      height: 170px;
+      background-color: #222;
+      overflow: hidden;
+      position: relative;
+    }
+    .card-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-rating {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(0,0,0,0.8);
+      color: #d4af37;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid #d4af37;
     }
     .card-body {
       padding: 20px;
@@ -138,6 +188,58 @@
       font-size: 1.1rem;
     }
 
+    /* O ekipi sekcija */
+    .about-section {
+      background: #141414;
+      border-top: 1px solid #222;
+      border-bottom: 1px solid #222;
+      margin-top: 60px;
+      padding: 50px 20px;
+    }
+    .about-container {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .about-container h2 {
+      color: #d4af37;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+    .about-container p {
+      color: #aaa;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .team-card {
+      background: #1c1c1c;
+      border: 1px solid #2d2d2d;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .team-card h3 {
+      color: #fff;
+      margin-bottom: 5px;
+    }
+    .team-card span {
+      color: #d4af37;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .team-card p {
+      color: #888;
+      font-size: 0.85rem;
+      margin: 0;
+    }
+
     /* Modal za video */
     .modal {
       display: none;
@@ -174,7 +276,7 @@
     .video-container {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%; /* 16:9 omjer */
+      padding-bottom: 56.25%;
       height: 0;
       margin-top: 15px;
     }
@@ -185,10 +287,10 @@
       border: none;
       border-radius: 8px;
     }
+    
     footer {
       text-align: center;
-      padding: 20px;
-      border-top: 1px solid #222;
+      padding: 30px;
       color: #555;
       font-size: 0.8rem;
     }
@@ -205,12 +307,37 @@
 
   <div class="controls-bar">
     <input type="text" id="searchInput" class="search-input" placeholder="Pretraži filmove...">
+    <div class="category-filters">
+      <button class="filter-btn active" onclick="filterCategory('Svi', this)">Svi</button>
+      <button class="filter-btn" onclick="filterCategory('Horor-Komedija', this)">Horor-Komedija</button>
+      <button class="filter-btn" onclick="filterCategory('Horor-Mračan', this)">Mračni Horor</button>
+    </div>
   </div>
 
   <main>
     <div id="movieGrid" class="grid"></div>
     <div id="emptyMsg" class="empty-msg" style="display: none;">Nema pronađenih filmova.</div>
   </main>
+
+  <!-- O EKIPI SEKCIJA -->
+  <section class="about-section">
+    <div class="about-container">
+      <h2>O Studiju i Ekipe</h2>
+      <p>Dobrodošli u službeni dom braće Frane i Luke[cite: 1]! Mi spajamo strah i smijeh – stvaramo originalne kratke filmove u kojima ćete se u jednom trenutku prestrašiti, a u drugom dobro nasmijati.</p>
+      <div class="team-grid">
+        <div class="team-card">
+          <h3>Frane</h3>
+          <span>Snimatelj, Redatelj & Montažer</span>
+          <p>Mozak iza kamere, kadrova i montaže koji brine da svaki prizor izgleda filmski i napeto.</p>
+        </div>
+        <div class="team-card">
+          <h3>Luka</h3>
+          <span>Glavni Glumac</span>
+          <p>Neustrašiva zvijezda pred kamerom koja hrabro podnosi sve strašne i urnebesne situacije.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Player Modal -->
   <div id="videoModal" class="modal">
@@ -224,29 +351,34 @@
   </div>
 
   <footer>
-    &copy; 2026 FRANE LUKA FILMOVI STUDIO - Sva prava pridržana.
+    &copy; 2026 FRANE LUKA FILMOVI STUDIO[cite: 1] - Sva prava pridržana.
   </footer>
 
   <script>
-    // OVDJE DODAGEŠ SVOJE FILMOVE! 
-    // Kada želiš novi film, samo kopiraš blok između vitičastih zagrada {} i dodaš ga s zarezom.
-    const filmoviData = [
+    // OVDJE DODAGEŠ SVOJE FILMOVE
+    // Sliku (slikaUrl) možeš staviti link neke slike s interneta ili izmisliti, a videoUrl je tvoj YouTube embed link.
+const filmoviData = [
       {
         id: 1,
         naziv: "Ukleta silueta",
         kategorija: "Horor-Mračan",
+        ocjena: "🎃 9.1/10",
         opis: "Kratak i malo strašan film.",
+        slikaUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500&auto=format&fit=crop&q=60",
         videoUrl: "https://www.youtube.com/embed/yLaNSrAobxI"
-      }
-
+      },
       {
         id: 2,
-        naziv: "Ukleta silueta-JUMSCRE EDITION",
+        naziv: "Ukleta silueta - JUMPSCARE EDITION",
         kategorija: "Horor-Mračan",
-        opis: "Kratak i pun jumscareova.",
-        videoUrl: "https://www.youtube.com/watch?v=5KXRs1O6NJ0"
+        ocjena: "🎃 9.5/10",
+        opis: "Kratak i pun jumpscareova.",
+        slikaUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60",
+        videoUrl: "https://www.youtube.com/embed/5KXRs1O6NJ0"
       }
     ];
+
+    let trenutnaKategorija = 'Svi';
 
     function renderFilmovi(lista) {
       const grid = document.getElementById('movieGrid');
@@ -264,8 +396,12 @@
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
+          <div class="card-img-container">
+            <img src="${film.slikaUrl || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&auto=format&fit=crop&q=60'}" alt="${film.naziv}">
+            <div class="card-rating">${film.ocjena || '⭐ 8/10'}</div>
+          </div>
           <div class="card-body">
-            <span class="card-tag">${film.kategorija || 'Horor-Komedija'}</span>
+            <span class="card-tag">${film.kategorija}</span>
             <h2 class="card-title">${film.naziv}</h2>
             <p class="card-desc">${film.opis || ''}</p>
             <button class="watch-btn" onclick="openModal('${film.naziv}', '${film.videoUrl}')">GLEDAJ FILM</button>
@@ -275,17 +411,29 @@
       });
     }
 
-    // Tražilica
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      const filtered = filmoviData.filter(f => 
-        f.naziv.toLowerCase().includes(query) || 
-        (f.opis && f.opis.toLowerCase().includes(query))
-      );
-      renderFilmovi(filtered);
-    });
+    // Filtriranje i tražilica
+    function primijeniFiltere() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      
+      const filtrirano = filmoviData.filter(film => {
+        const odgovaraKategoriji = (trenutnaKategorija === 'Svi' || film.kategorija === trenutnaKategorija);
+        const odgovaraPretrazi = film.naziv.toLowerCase().includes(query) || (film.opis && film.opis.toLowerCase().includes(query));
+        return odgovaraKategoriji && odgovaraPretrazi;
+      });
 
-    // Otvaranje i zatvaranje videa
+      renderFilmovi(filtrirano);
+    }
+
+    function filterCategory(kat, btn) {
+      trenutnaKategorija = kat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      primijeniFiltere();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', primijeniFiltere);
+
+    // Modal kontrole
     function openModal(title, videoUrl) {
       document.getElementById('modalTitle').innerText = title;
       document.getElementById('videoIframe').src = videoUrl;
@@ -297,7 +445,7 @@
       document.getElementById('videoModal').classList.remove('active');
     }
 
-    // Pokreni prikaz pri učitavanju stranice
+    // Pokretanje pri učitavanju
     renderFilmovi(filmoviData);
   </script>
 </body>
